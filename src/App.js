@@ -15,16 +15,11 @@ function TaskList({ tasks, onClickTask }) {
     );
 }
 
-function Timer({ time }) {
-    return <div>Время: {formatTime(time)}</div>;
-}
 
 function formatTime(seconds) {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     return `${hours}:${minutes.toString().padStart(2, '0')}`;
-
-
 }
 
 function App() {
@@ -55,12 +50,19 @@ function App() {
     };
 
     const onClickTask = (index) => {
-        setTasks((prevTasks) =>
-            prevTasks.map((task, i) => ({
+        setTasks((prevTasks) => {
+            const updatedTasks = prevTasks.map((task, i) => ({
                 ...task,
                 isActive: i === index ? !task.isActive : task.isActive,
-            }))
-        );
+            }));
+
+            // Если задача стала неактивной и время менее 1 минуты, удаляем задачу
+            if (!updatedTasks[index].isActive && updatedTasks[index].time < 60) {
+                updatedTasks.splice(index, 1);
+            }
+
+            return updatedTasks;
+        });
     };
 
     return (
@@ -72,7 +74,7 @@ function App() {
                 onChange={(e) => setTaskText(e.target.value)}
                 placeholder="Введите текст задачи"
             />
-            <button onClick={addTask}></button>
+            <button onClick={addTask}>Добавить задачу</button>
             <TaskList tasks={tasks} onClickTask={onClickTask} />
         </div>
     );
