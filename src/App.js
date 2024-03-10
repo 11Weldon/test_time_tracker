@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
-function TaskList({ tasks, onClickTask, onStopTimer }) {
+function TaskList({ tasks, onClickTask }) {
     return (
         <div>
             <h2>Список задач</h2>
             <ul>
                 {tasks.map((task, index) => (
-                    <li key={index}>
-                        {task.name} - {task.time}
-                        <button onClick={() => onClickTask(index)}>Старт/Стоп</button>
-                        <button onClick={() => onStopTimer(index)}>Сбросить</button>
+                    <li key={index} onClick={() => onClickTask(index)}>
+                        {task.name} - {formatTime(task.time)}
                     </li>
                 ))}
             </ul>
@@ -18,11 +16,20 @@ function TaskList({ tasks, onClickTask, onStopTimer }) {
 }
 
 function Timer({ time }) {
-    return <div>Время: {time}</div>;
+    return <div>Время: {formatTime(time)}</div>;
+}
+
+function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${hours}:${minutes.toString().padStart(2, '0')}`;
+
+
 }
 
 function App() {
     const [tasks, setTasks] = useState([]);
+    const [taskText, setTaskText] = useState('');
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -39,11 +46,12 @@ function App() {
 
     const addTask = () => {
         const newTask = {
-            name: `lol`,
+            name: taskText || `Задача ${tasks.length + 1}`,
             time: 0,
             isActive: true,
         };
         setTasks([...tasks, newTask]);
+        setTaskText(''); // Сбрасываем текст после добавления задачи
     };
 
     const onClickTask = (index) => {
@@ -55,21 +63,17 @@ function App() {
         );
     };
 
-    const onStopTimer = (index) => {
-        setTasks((prevTasks) =>
-            prevTasks.map((task, i) => ({
-                ...task,
-                time: i === index ? 0 : task.time,
-                isActive: i === index ? false : task.isActive,
-            }))
-        );
-    };
-
     return (
         <div>
             <h1>Программа с индивидуальными таймерами</h1>
-            <button onClick={addTask}>Добавить задачу</button>
-            <TaskList tasks={tasks} onClickTask={onClickTask} onStopTimer={onStopTimer} />
+            <input
+                type="text"
+                value={taskText}
+                onChange={(e) => setTaskText(e.target.value)}
+                placeholder="Введите текст задачи"
+            />
+            <button onClick={addTask}></button>
+            <TaskList tasks={tasks} onClickTask={onClickTask} />
         </div>
     );
 }
