@@ -15,7 +15,6 @@ function TaskList({ tasks, onClickTask }) {
     );
 }
 
-
 function formatTime(seconds) {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -46,7 +45,7 @@ function App() {
             isActive: true,
         };
         setTasks([...tasks, newTask]);
-        setTaskText(''); // Сбрасываем текст после добавления задачи
+        setTaskText('');
     };
 
     const onClickTask = (index) => {
@@ -56,7 +55,6 @@ function App() {
                 isActive: i === index ? !task.isActive : task.isActive,
             }));
 
-            // Если задача стала неактивной и время менее 1 минуты, удаляем задачу
             if (!updatedTasks[index].isActive && updatedTasks[index].time < 60) {
                 updatedTasks.splice(index, 1);
             }
@@ -66,15 +64,17 @@ function App() {
     };
 
     return (
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
             <h1>Программа с индивидуальными таймерами</h1>
-            <input
-                type="text"
-                value={taskText}
-                onChange={(e) => setTaskText(e.target.value)}
-                placeholder="Введите текст задачи"
-            />
-            <button onClick={addTask}>Добавить задачу</button>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                <input
+                    type="text"
+                    value={taskText}
+                    onChange={(e) => setTaskText(e.target.value)}
+                    placeholder="Введите текст задачи"
+                />
+                <button onClick={addTask} style={{ marginLeft: '8px' }}>Добавить задачу</button>
+            </div>
             <TaskList tasks={tasks} onClickTask={onClickTask} />
         </div>
     );
