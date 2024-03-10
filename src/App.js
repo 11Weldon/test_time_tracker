@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function TaskList({ tasks, onClickTask }) {
     return (
@@ -7,7 +9,7 @@ function TaskList({ tasks, onClickTask }) {
                 {tasks.map((task, index) => (
                     <li
                         key={index}
-                        onClick={() => onClickTask(index)}
+                        onClick={() => onClickTask(index, task.time, task.name)}
                         style={{
                             padding: '12px', // Увеличил размер задачи
                             borderBottom: '1px solid white',
@@ -16,7 +18,7 @@ function TaskList({ tasks, onClickTask }) {
                         }}
                     >
                         <span>{task.name}</span>
-                        <span>{formatTime(task.time)}</span>
+                        <span style={{color: 'blue'}}>{formatTime(task.time)}</span>
                     </li>
                 ))}
             </ul>
@@ -57,7 +59,7 @@ function App() {
         setTaskText('');
     };
 
-    const onClickTask = (index) => {
+    const onClickTask = (index, time, name) => {
         setTasks((prevTasks) => {
             const updatedTasks = prevTasks.map((task, i) => ({
                 ...task,
@@ -65,6 +67,8 @@ function App() {
             }));
 
             if (!updatedTasks[index].isActive && updatedTasks[index].time < 60) {
+                // Показываем уведомление, если время меньше одной минуты
+                toast.error(`Внимание! Время для задачи "${name}" меньше 1 минуты!`);
                 updatedTasks.splice(index, 1);
             }
 
@@ -75,17 +79,26 @@ function App() {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: 'black', color: 'white' }}>
             <h1></h1>
-            <div style={{ display: 'flex', alignItems: 'center', backgroundColor: 'grey', padding: '5px', borderRadius: '8px', marginBottom: '2px', width: '50%' }}>
+            <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#222222', padding: '5px', borderRadius: '8px', marginBottom: '2px', width: '50%' }}>
                 <input
                     type="text"
                     value={taskText}
                     onChange={(e) => setTaskText(e.target.value)}
                     placeholder=""
-                    style={{ flex: 1, marginRight: '8px', border: 'none', borderRadius: '4px', padding: '8px', backgroundColor: '(60,60,60)' }}
+                    style={{ flex: 1, marginRight: '8px', border: 'none', borderRadius: '4px', padding: '8px', backgroundColor: '#222222', color: 'white' }}
                 />
-                <button onClick={addTask} style={{ borderRadius: '4px', padding: '8px', backgroundColor: 'white', border: 'none', cursor: 'pointer' }}>Добавить задачу</button>
+                <img
+                    src="../public/play-button-svgrepo-com.svg" width="20" height="20" // Укажите путь к вашему SVG-изображению
+                    // d="../public/1.svg" width="30" height="30"
+                    alt=">"
+
+                    onClick={addTask}
+                    style={{ cursor: 'pointer', borderRadius: '8px'}}
+                />
+
             </div>
             <TaskList tasks={tasks} onClickTask={onClickTask} />
+            <ToastContainer />
         </div>
     );
 }
