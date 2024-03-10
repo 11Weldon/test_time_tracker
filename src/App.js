@@ -2,12 +2,21 @@ import React, { useState, useEffect } from 'react';
 
 function TaskList({ tasks, onClickTask }) {
     return (
-        <div>
-            <h2>Список задач</h2>
-            <ul>
+        <div style={{ marginTop: '0px', width: '50%', borderTop: '1px white', borderBottom: '1px white' }}>
+            <ul style={{ listStyleType: 'none', padding: 0 }}>
                 {tasks.map((task, index) => (
-                    <li key={index} onClick={() => onClickTask(index)}>
-                        {task.name} - {formatTime(task.time)}
+                    <li
+                        key={index}
+                        onClick={() => onClickTask(index)}
+                        style={{
+                            padding: '12px', // Увеличил размер задачи
+                            borderBottom: '1px solid white',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        <span>{task.name}</span>
+                        <span>{formatTime(task.time)}</span>
                     </li>
                 ))}
             </ul>
@@ -64,16 +73,17 @@ function App() {
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-            <h1>Программа с индивидуальными таймерами</h1>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: 'black', color: 'white' }}>
+            <h1></h1>
+            <div style={{ display: 'flex', alignItems: 'center', backgroundColor: 'grey', padding: '5px', borderRadius: '8px', marginBottom: '2px', width: '50%' }}>
                 <input
                     type="text"
                     value={taskText}
                     onChange={(e) => setTaskText(e.target.value)}
-                    placeholder="Введите текст задачи"
+                    placeholder=""
+                    style={{ flex: 1, marginRight: '8px', border: 'none', borderRadius: '4px', padding: '8px', backgroundColor: '(60,60,60)' }}
                 />
-                <button onClick={addTask} style={{ marginLeft: '8px' }}>Добавить задачу</button>
+                <button onClick={addTask} style={{ borderRadius: '4px', padding: '8px', backgroundColor: 'white', border: 'none', cursor: 'pointer' }}>Добавить задачу</button>
             </div>
             <TaskList tasks={tasks} onClickTask={onClickTask} />
         </div>
