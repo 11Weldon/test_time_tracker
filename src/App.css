@@ -27,7 +27,11 @@
 .App-link {
   color: #61dafb;
 }
-
+.pls{
+  width: 20px;
+  height: 20px;
+  background-image: url("../public/4.png");
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -36,3 +40,4 @@
     transform: rotate(360deg);
   }
 }
+
